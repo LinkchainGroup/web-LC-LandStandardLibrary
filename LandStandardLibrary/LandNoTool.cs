@@ -5,6 +5,8 @@ namespace LandStandardLibrary
     public interface ILandNoTool
     {
         List<string> Build();
+        LandNoTool Normalize();
+
         LandNoTool Trim();
         LandNoTool FullToHalf();
         LandNoTool PadZero();        
@@ -23,6 +25,15 @@ namespace LandStandardLibrary
         public LandNoTool(List<string> landnos)
         {
             LandNoList = landnos;
+        }
+
+        /// <summary>
+        /// 使用者只需呼叫此方法即可包含其他所有的轉換
+        /// </summary>
+        /// <returns></returns>
+        public LandNoTool Normalize()
+        {
+            return this;
         }
 
         /// <summary>
@@ -48,7 +59,7 @@ namespace LandStandardLibrary
         /// </summary>
         /// <param name="landNo"></param>
         /// <returns></returns>
-        public LandNoTool PadZero ()
+        public LandNoTool PadZero()
         {
             return this;
         }

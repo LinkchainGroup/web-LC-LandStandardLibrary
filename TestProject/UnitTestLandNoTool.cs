@@ -15,8 +15,22 @@ namespace LandNoToolTests
             // Act 
             var actualResult = new LandNoTool(testLandno).Trim().Build().FirstOrDefault();
 
-            // Assert
-            Assert.Equal(expectedResult, actualResult);
+            // Assert            
+            actualResult.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Fact]
+        public void TestTrim_2()
+        {
+            // Arrange 
+            var testLandno = new List<string> { " 4 5 6 7 ", "34", "5 67", "ab c " };
+            string expectedResult = "4567";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Trim().Build();
+
+            // Assert            
+            actualResult.Should().BeEquivalentTo(expectedResult);
         }
         #endregion TestTrim
 
@@ -31,8 +45,8 @@ namespace LandNoToolTests
             // Act 
             var actualResult = new LandNoTool(testLandno).FullToHalf().Build().FirstOrDefault();            
 
-            // Assert
-            Assert.Equal(expectedResult, actualResult);
+            // Assert            
+            actualResult.Should().BeEquivalentTo(expectedResult);
         }
         #endregion TestFullToHalf
 
@@ -48,7 +62,7 @@ namespace LandNoToolTests
             var actualResult = new LandNoTool(testLandno).PadZero().Build().FirstOrDefault();
 
             // Assert
-            Assert.Equal(expectedResult, actualResult);            
+            actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
         [Fact]
@@ -62,7 +76,7 @@ namespace LandNoToolTests
             var actualResult = new LandNoTool(testLandno).PadZero().Build().FirstOrDefault();
 
             // Assert
-            Assert.Equal(expectedResult, actualResult);
+            actualResult.Should().BeEquivalentTo(expectedResult);
         }
         #endregion TestPadZero
     }
