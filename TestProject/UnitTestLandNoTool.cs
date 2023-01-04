@@ -79,5 +79,21 @@ namespace LandNoToolTests
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
         #endregion TestPadZero
+
+        #region TestNormalize
+        [Fact]
+        public void TestNormalize_1()
+        {
+            // Arrange 
+            var testLandno = new List<string> { " 4 5 6 7 ", "34", "5 67", "ab c " };
+            var expectedResult = new LandNoTool(testLandno).Trim().FullToHalf().PadZero().Build();
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Normalize().Build();
+            
+            // Assert            
+            actualResult.Should().BeEquivalentTo(expectedResult);
+        }
+        #endregion TestNormalize
     }
 }
