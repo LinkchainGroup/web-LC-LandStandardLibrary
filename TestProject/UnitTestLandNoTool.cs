@@ -396,8 +396,8 @@ namespace LandNoToolTests
             {
                 actualResult.Should().BeEquivalentTo(
                     new List<LandNoResult>() {
-                        new LandNoResult("") { LandNo = "", IsNormalized = true, ErrorMsg = "" },
-                        new LandNoResult(" ") { LandNo = "", IsNormalized = true, ErrorMsg = "" },
+                        new LandNoResult("") { LandNo = "", IsNormalized = false, ErrorMsg = "地號不可為空" },
+                        new LandNoResult(" ") { LandNo = "", IsNormalized = false, ErrorMsg = "地號不可為空" },
                     }
                 );
             }
@@ -420,7 +420,6 @@ namespace LandNoToolTests
                     x.LandNo.Should().BeEquivalentTo(expectedResult)
                 );                
             }
-
         }
 
         [Fact]
@@ -440,7 +439,44 @@ namespace LandNoToolTests
                     x.LandNo.Should().BeEquivalentTo(expectedResult)
                 );
             }
+        }
 
+        [Fact]
+        public void TestNormalize_4()
+        {
+            // Arrange 
+            var testLandno = new List<string> { "０４５９－１" };
+            var expectedResult = "0459-0001";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Normalize().Build();
+
+            // Assert            
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
+
+        [Fact]
+        public void TestNormalize_5()
+        {
+            // Arrange 
+            var testLandno = new List<string> { "０4５ 8— １ " };
+            var expectedResult = "0458-0001";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Normalize().Build();
+
+            // Assert            
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
         }
         #endregion TestNormalize
     }

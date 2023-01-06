@@ -117,6 +117,7 @@ namespace LandStandardLibrary
                             sb.Append('0');
                             break;
                         case '－':
+                        case '—':
                             sb.Append('-');
                             break;
                         default:
@@ -141,8 +142,8 @@ namespace LandStandardLibrary
             {
                 if (a.LandNo == string.Empty)
                 {
-                    a.IsNormalized = true;
-                    a.ErrorMsg = "";
+                    a.IsNormalized = false;
+                    a.ErrorMsg = "地號不可為空";
                 }
                 else if (a.LandNo.First() == '(' && a.LandNo.Last() == ')')
                 {
