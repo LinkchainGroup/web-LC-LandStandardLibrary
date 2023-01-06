@@ -25,9 +25,18 @@ namespace LandStandardLibrary
         {
             LandNoList.Add(new LandNoResult(landno));
         }
+        public LandNoTool(string landno, int id)
+        {
+            LandNoList.Add(new LandNoResult(landno, id));
+        }
         public LandNoTool(List<string> landnos)
         {
             LandNoList = landnos.Select(a => new LandNoResult(a)).ToList();
+        }
+
+        public LandNoTool(List<KeyValuePair<int, string>> landnos)
+        {
+            LandNoList = landnos.Select(a => new LandNoResult(a.Value, a.Key)).ToList();
         }
 
         /// <summary>
@@ -223,10 +232,20 @@ namespace LandStandardLibrary
         /// 錯誤訊息
         /// </summary>
         public string ErrorMsg { get; set; } = "";
+        /// <summary>
+        /// 參照用的ID
+        /// </summary>
+        public int ID { get; set; } = 0;
 
         public LandNoResult(string landNo) 
         {
             LandNo = landNo;
+        }
+
+        public LandNoResult(string landNo, int id)
+        {
+            LandNo = landNo;
+            ID = id;
         }
     }
 }

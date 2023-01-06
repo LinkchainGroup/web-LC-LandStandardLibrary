@@ -297,6 +297,44 @@ namespace LandNoToolTests
                 );
             }
         }
+
+        [Fact]
+        public void TestPadZero_3()
+        {
+            // Arrange 
+            string testLandno = "-56";
+            string expectedResult = "0000-0056";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Verify().PadZero().Build();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
+
+        [Fact]
+        public void TestPadZero_4()
+        {
+            // Arrange 
+            string testLandno = "78-";
+            string expectedResult = "0078-0000";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Verify().PadZero().Build();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
         #endregion TestPadZero
 
         #region TestNormalize
