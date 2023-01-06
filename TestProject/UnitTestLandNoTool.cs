@@ -78,10 +78,13 @@ namespace LandNoToolTests
             using (new AssertionScope())
             {
                 actualResult.Should().AllSatisfy(x =>
+                    x.IsCustom.Should().BeTrue()
+                );
+                actualResult.Should().AllSatisfy(x =>
                     x.IsNormalized.Should().BeFalse()
                 );
                 actualResult.Should().AllSatisfy(x =>
-                    x.ErrorMsg.Should().BeEquivalentTo("自定義地號")
+                    x.ErrorMsg.Should().BeEquivalentTo("")
                 );
             }
         }

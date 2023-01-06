@@ -129,8 +129,9 @@ namespace LandStandardLibrary
             {
                 if(a.LandNo.First() == '(' && a.LandNo.Last() == ')')
                 {
+                    a.IsCustom = true;
                     a.IsNormalized = false;
-                    a.ErrorMsg = "自定義地號";
+                    a.ErrorMsg = "";
                 }
                 else
                 {
@@ -210,6 +211,10 @@ namespace LandStandardLibrary
         /// 地號
         /// </summary>
         public string LandNo { get; set; } = "";
+        /// <summary>
+        /// 是否為自定義地號
+        /// </summary>
+        public bool IsCustom { get; set; } = false;
         /// <summary>
         /// 是否成功標準化
         /// </summary>
