@@ -22,7 +22,7 @@ namespace LandNoToolTests
                 actualResult.Should().AllSatisfy(x =>
                     x.LandNo.Should().BeEquivalentTo(expectedResult)
                 );
-            }                
+            }
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace LandNoToolTests
             using (new AssertionScope())
             {
                 actualResult.Select(a => a.LandNo).Should().BeEquivalentTo(expectedResult);
-            }            
+            }
         }
         #endregion TestTrim
 
@@ -60,7 +60,7 @@ namespace LandNoToolTests
                 actualResult.Should().AllSatisfy(x =>
                     x.LandNo.Should().BeEquivalentTo(expectedResult)
                 );
-            }                
+            }
         }
         #endregion TestFullToHalf
 
@@ -69,7 +69,7 @@ namespace LandNoToolTests
         public void TestVerify_1()
         {
             // Arrange 
-            string testLandno = "(河川地地號)";            
+            string testLandno = "(河川地地號)";
 
             // Act 
             var actualResult = new LandNoTool(testLandno).Verify().Build();
@@ -351,7 +351,37 @@ namespace LandNoToolTests
             // Assert            
             using (new AssertionScope())
             {
-                actualResult.Should().BeEquivalentTo(expectedResult);
+                actualResult.Should().BeEquivalentTo(
+                    new List<LandNoResult>() {
+                        new LandNoResult("") { LandNo = "4567-0000", IsNormalized = true, ErrorMsg = "" },
+                        new LandNoResult("") { LandNo = "0034-0000", IsNormalized = true, ErrorMsg = "" },
+                        new LandNoResult("") { LandNo = "0567-0000", IsNormalized = true, ErrorMsg = "" },
+                        new LandNoResult("") { LandNo = "abc", IsNormalized = false, ErrorMsg = "非標準地號" },
+                    }
+                );
+            }
+        }
+
+
+        [Fact]
+        public void TestNormalize_Empty()
+        {
+            // Arrange 
+            var testLandno = new List<string> { "", " " };
+            var expectedResult = new LandNoTool(testLandno).Trim().FullToHalf().Verify().PadZero().Build();
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Normalize().Build();
+
+            // Assert            
+            using (new AssertionScope())
+            {
+                actualResult.Should().BeEquivalentTo(
+                    new List<LandNoResult>() {
+                        new LandNoResult("") { LandNo = "", IsNormalized = true, ErrorMsg = "" },
+                        new LandNoResult(" ") { LandNo = "", IsNormalized = true, ErrorMsg = "" },
+                    }
+                );
             }
         }
         #endregion TestNormalize

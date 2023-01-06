@@ -12,7 +12,7 @@ namespace LandStandardLibrary
 
         LandNoTool Trim();
         LandNoTool FullToHalf();
-        LandNoTool PadZero();        
+        LandNoTool PadZero();
     }
 
     /// <summary>
@@ -136,7 +136,12 @@ namespace LandStandardLibrary
 
             LandNoList.ForEach(a =>
             {
-                if(a.LandNo.First() == '(' && a.LandNo.Last() == ')')
+                if (a.LandNo == string.Empty)
+                {
+                    a.IsNormalized = true;
+                    a.ErrorMsg = "";
+                }
+                else if (a.LandNo.First() == '(' && a.LandNo.Last() == ')')
                 {
                     a.IsCustom = true;
                     a.IsNormalized = false;
@@ -145,12 +150,12 @@ namespace LandStandardLibrary
                 else
                 {
                     var splitArr = a.LandNo.Split('-');
-                    if(splitArr.Length > 2)
+                    if (splitArr.Length > 2)
                     {
                         a.IsNormalized = false;
                         a.ErrorMsg = "非標準地號";
                     }
-                    else if(splitArr.Sum(arr => arr.Length) > 8)
+                    else if (splitArr.Sum(arr => arr.Length) > 8)
                     {
                         a.IsNormalized = false;
                         a.ErrorMsg = "非標準地號";
@@ -182,19 +187,26 @@ namespace LandStandardLibrary
         /// <returns></returns>
         public LandNoTool PadZero()
         {
-            LandNoList.ForEach(a => 
+            LandNoList.ForEach(a =>
             {
                 if (a.IsNormalized)
                 {
-                    var splitArr = a.LandNo.Split('-').ToList();
-                    if(splitArr.Count() == 1) { splitArr.Add(""); }
-                    
-                    for(var i = 0; i < splitArr.Count(); i++)
+                    if (a.LandNo != string.Empty)
                     {
-                        splitArr[i] = splitArr[i].PadLeft(4, '0');
+                        var splitArr = a.LandNo.Split('-').ToList();
+                        if (splitArr.Count() == 1) { splitArr.Add(""); }
+
+                        for (var i = 0; i < splitArr.Count(); i++)
+                        {
+                            splitArr[i] = splitArr[i].PadLeft(4, '0');
+                        }
+
+                        a.LandNo = string.Join("-", splitArr);
                     }
-                    
-                    a.LandNo = string.Join("-", splitArr);
+                    else
+                    {
+                        a.LandNo = string.Empty;
+                    }
                 }
             });
 
@@ -237,7 +249,7 @@ namespace LandStandardLibrary
         /// </summary>
         public int ID { get; set; } = 0;
 
-        public LandNoResult(string landNo) 
+        public LandNoResult(string landNo)
         {
             LandNo = landNo;
         }
