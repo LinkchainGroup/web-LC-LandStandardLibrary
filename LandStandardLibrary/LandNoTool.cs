@@ -74,7 +74,7 @@ namespace LandStandardLibrary
         }
 
         /// <summary>
-        /// 數字全形轉半形
+        /// 數字和連結號，全形轉半形
         /// </summary>
         /// <returns></returns>
         public LandNoTool FullToHalf()
@@ -115,6 +115,9 @@ namespace LandStandardLibrary
                             break;
                         case '０':
                             sb.Append('0');
+                            break;
+                        case '－':
+                            sb.Append('-');
                             break;
                         default:
                             sb.Append(a.LandNo[i]);

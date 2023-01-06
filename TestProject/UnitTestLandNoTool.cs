@@ -1,4 +1,4 @@
-using FluentAssertions.Execution;
+Ôªøusing FluentAssertions.Execution;
 using LandStandardLibrary;
 
 namespace LandNoToolTests
@@ -48,7 +48,7 @@ namespace LandNoToolTests
         public void TestFullToHalf_1()
         {
             // Arrange 
-            string testLandno = "¢∞¢±¢≤¢≥";
+            string testLandno = "ÔºëÔºíÔºìÔºî";
             string expectedResult = "1234";
 
             // Act 
@@ -62,6 +62,25 @@ namespace LandNoToolTests
                 );
             }                
         }
+
+        [Fact]
+        public void TestFullToHalf_2()
+        {
+            // Arrange 
+            string testLandno = "ÔºëÔºíÔºìÔºîÔºçÔºë";
+            string expectedResult = "1234-1";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).FullToHalf().Build();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
         #endregion TestFullToHalf
 
         #region TestVerify
@@ -69,7 +88,7 @@ namespace LandNoToolTests
         public void TestVerify_1()
         {
             // Arrange 
-            string testLandno = "(™e§t¶a¶a∏π)";            
+            string testLandno = "(Ê≤≥Â∑ùÂú∞Âú∞Ëôü)";            
 
             // Act 
             var actualResult = new LandNoTool(testLandno).Verify().Build();
@@ -93,7 +112,7 @@ namespace LandNoToolTests
         public void TestVerify_2()
         {
             // Arrange 
-            string testLandno = "5-1(§∫)";
+            string testLandno = "5-1(ÂÖß)";
 
             // Act 
             var actualResult = new LandNoTool(testLandno).Verify().Build();
@@ -105,7 +124,7 @@ namespace LandNoToolTests
                     x.IsNormalized.Should().BeFalse()
                 );
                 actualResult.Should().AllSatisfy(x =>
-                    x.ErrorMsg.Should().BeEquivalentTo("´Dº–∑«¶a∏π")
+                    x.ErrorMsg.Should().BeEquivalentTo("ÈùûÊ®ôÊ∫ñÂú∞Ëôü")
                 );
             }
         }
@@ -127,7 +146,7 @@ namespace LandNoToolTests
                     x.IsNormalized.Should().BeFalse()
                 );
                 actualResult.Should().AllSatisfy(x =>
-                    x.ErrorMsg.Should().BeEquivalentTo("´Dº–∑«¶a∏π")
+                    x.ErrorMsg.Should().BeEquivalentTo("ÈùûÊ®ôÊ∫ñÂú∞Ëôü")
                 );
             }
         }
@@ -136,7 +155,7 @@ namespace LandNoToolTests
         public void TestVerify_4()
         {
             // Arrange 
-            string testLandno = "§≠-§G";
+            string testLandno = "‰∫î-‰∫å";
 
             // Act 
             var actualResult = new LandNoTool(testLandno).Verify().Build();
@@ -148,7 +167,7 @@ namespace LandNoToolTests
                     x.IsNormalized.Should().BeFalse()
                 );
                 actualResult.Should().AllSatisfy(x =>
-                    x.ErrorMsg.Should().BeEquivalentTo("´Dº–∑«¶a∏π")
+                    x.ErrorMsg.Should().BeEquivalentTo("ÈùûÊ®ôÊ∫ñÂú∞Ëôü")
                 );
             }
         }
@@ -211,7 +230,7 @@ namespace LandNoToolTests
                     x.IsNormalized.Should().BeFalse()
                 );
                 actualResult.Should().AllSatisfy(x =>
-                    x.ErrorMsg.Should().BeEquivalentTo("´Dº–∑«¶a∏π")
+                    x.ErrorMsg.Should().BeEquivalentTo("ÈùûÊ®ôÊ∫ñÂú∞Ëôü")
                 );
             }
         }
@@ -232,7 +251,7 @@ namespace LandNoToolTests
                     x.IsNormalized.Should().BeFalse()
                 );
                 actualResult.Should().AllSatisfy(x =>
-                    x.ErrorMsg.Should().BeEquivalentTo("´Dº–∑«¶a∏π")
+                    x.ErrorMsg.Should().BeEquivalentTo("ÈùûÊ®ôÊ∫ñÂú∞Ëôü")
                 );
             }
         }
@@ -253,7 +272,7 @@ namespace LandNoToolTests
                     x.IsNormalized.Should().BeFalse()
                 );
                 actualResult.Should().AllSatisfy(x =>
-                    x.ErrorMsg.Should().BeEquivalentTo("´Dº–∑«¶a∏π")
+                    x.ErrorMsg.Should().BeEquivalentTo("ÈùûÊ®ôÊ∫ñÂú∞Ëôü")
                 );
             }
         }
@@ -353,6 +372,46 @@ namespace LandNoToolTests
             {
                 actualResult.Should().BeEquivalentTo(expectedResult);
             }
+        }
+
+        [Fact]
+        public void TestNormalize_2()
+        {
+            // Arrange 
+            var testLandno = new List<string> { "ÔºëÔºíÔºìÔºîÔºçÔºë" };
+            var expectedResult = "1234-0001";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Normalize().Build();
+
+            // Assert            
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );                
+            }
+
+        }
+
+        [Fact]
+        public void TestNormalize_3()
+        {
+            // Arrange 
+            var testLandno = new List<string> { "‰∏Ä‰∫å" };
+            var expectedResult = "‰∏Ä‰∫å";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Normalize().Build();
+
+            // Assert            
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+
         }
         #endregion TestNormalize
     }
