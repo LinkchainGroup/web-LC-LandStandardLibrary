@@ -385,7 +385,7 @@ namespace LandNoToolTests
         public void TestNormalize_Empty()
         {
             // Arrange 
-            var testLandno = new List<string> { "", " " };
+            var testLandno = new List<string> { "", " " ,"-"};
             var expectedResult = new LandNoTool(testLandno).Trim().FullToHalf().Verify().PadZero().Build();
 
             // Act 
@@ -398,6 +398,7 @@ namespace LandNoToolTests
                     new List<LandNoResult>() {
                         new LandNoResult("") { LandNo = "", IsNormalized = false, ErrorMsg = "地號不可為空" },
                         new LandNoResult(" ") { LandNo = "", IsNormalized = false, ErrorMsg = "地號不可為空" },
+                        new LandNoResult("-") { LandNo = "-", IsNormalized = false, ErrorMsg = "地號不可為空" },
                     }
                 );
             }

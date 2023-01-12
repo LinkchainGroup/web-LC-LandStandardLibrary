@@ -154,7 +154,12 @@ namespace LandStandardLibrary
                 else
                 {
                     var splitArr = a.LandNo.Split('-');
-                    if (splitArr.Length > 2)
+                    if (!splitArr.Any(x => !string.IsNullOrEmpty(x)))
+                    {
+                        a.IsNormalized = false;
+                        a.ErrorMsg = "地號不可為空";
+                    }
+                    else if (splitArr.Length > 2)
                     {
                         a.IsNormalized = false;
                         a.ErrorMsg = "非標準地號";
