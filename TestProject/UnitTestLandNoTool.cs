@@ -87,7 +87,7 @@ namespace LandNoToolTests
         public void TestVerify_1()
         {
             // Arrange 
-            string testLandno = "(河川地地號)";            
+            string testLandno = "(河川地地號)";
 
             // Act 
             var actualResult = new LandNoTool(testLandno).Verify().Build();
@@ -275,7 +275,87 @@ namespace LandNoToolTests
                 );
             }
         }
+
+        [Fact]
+        public void TestVerify_10()
+        {
+            // Arrange 
+            string testLandno = "12345678";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Verify().Build();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.IsNormalized.Should().BeTrue()
+                );
+                actualResult.Should().AllSatisfy(x =>
+                    x.ErrorMsg.Should().BeEquivalentTo("")
+                );
+            }
+        }
         #endregion TestVerify
+
+        #region TestPadDash
+        [Fact]
+        public void TestPadDash_1()
+        {
+            // Arrange 
+            string testLandno = "00011234";
+            string expectedResult = "0001-1234";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Verify().PadDash().Build();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
+
+        [Fact]
+        public void TestPadDash_2()
+        {
+            // Arrange 
+            string testLandno = "0001-1234";
+            string expectedResult = "0001-1234";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Verify().PadDash().Build();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
+
+        [Fact]
+        public void TestPadDash_3()
+        {
+            // Arrange 
+            string testLandno = "0001123";
+            string expectedResult = "0001123";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Verify().PadDash().Build();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
+        #endregion
 
         #region TestPadZero
         [Fact]
@@ -385,7 +465,7 @@ namespace LandNoToolTests
         public void TestNormalize_Empty()
         {
             // Arrange 
-            var testLandno = new List<string> { "", " " ,"-"};
+            var testLandno = new List<string> { "", " ", "-" };
             var expectedResult = new LandNoTool(testLandno).Trim().FullToHalf().Verify().PadZero().Build();
 
             // Act 
@@ -419,7 +499,7 @@ namespace LandNoToolTests
             {
                 actualResult.Should().AllSatisfy(x =>
                     x.LandNo.Should().BeEquivalentTo(expectedResult)
-                );                
+                );
             }
         }
 
@@ -467,6 +547,25 @@ namespace LandNoToolTests
             // Arrange 
             var testLandno = new List<string> { "０4５ 8— １ " };
             var expectedResult = "0458-0001";
+
+            // Act 
+            var actualResult = new LandNoTool(testLandno).Normalize().Build();
+
+            // Assert            
+            using (new AssertionScope())
+            {
+                actualResult.Should().AllSatisfy(x =>
+                    x.LandNo.Should().BeEquivalentTo(expectedResult)
+                );
+            }
+        }
+
+        [Fact]
+        public void TestNormalize_6()
+        {
+            // Arrange 
+            var testLandno = new List<string> { "00010021" };
+            var expectedResult = "0001-0021";
 
             // Act 
             var actualResult = new LandNoTool(testLandno).Normalize().Build();
