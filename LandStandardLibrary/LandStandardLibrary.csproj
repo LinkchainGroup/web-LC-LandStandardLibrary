@@ -2,7 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	  <Version>1.0.2</Version>
+	  <Version>1.0.4</Version>
+	  <Authors>黃敏睿,許庭禎</Authors>
+	  <PackageProjectUrl>https://tfs.lingcheng.tw/tfs/DefaultCollection/TDD/_git/web-LC-LandStandardLibrary</PackageProjectUrl>
+	  <PackageIcon>icon.png</PackageIcon>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <RepositoryUrl>https://tfs.lingcheng.tw/tfs/DefaultCollection/TDD/_git/web-LC-LandStandardLibrary</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <Description>地號標準化工具</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
