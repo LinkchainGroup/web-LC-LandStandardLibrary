@@ -1,6 +1,6 @@
 using LandStandardLibrary;
 
-namespace LandNoToolTests
+namespace LandNoToolXunitTest
 {
     public class LandNoToolTests
     {
