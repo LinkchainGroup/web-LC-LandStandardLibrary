@@ -48,6 +48,7 @@ namespace LandStandardLibrary
             Trim();
             FullToHalf();
             Verify();
+            PadDash();
             PadZero();
             return this;
         }
@@ -153,38 +154,59 @@ namespace LandStandardLibrary
                 }
                 else
                 {
-                    var splitArr = a.LandNo.Split('-');
-                    if (!splitArr.Any(x => !string.IsNullOrEmpty(x)))
-                    {
-                        a.IsNormalized = false;
-                        a.ErrorMsg = "地號不可為空";
-                    }
-                    else if (splitArr.Length > 2)
-                    {
-                        a.IsNormalized = false;
-                        a.ErrorMsg = "非標準地號";
-                    }
-                    else if (splitArr.Sum(arr => arr.Length) > 8)
-                    {
-                        a.IsNormalized = false;
-                        a.ErrorMsg = "非標準地號";
-                    }
-                    else if (splitArr.Any(c => c.Length > 4))
-                    {
-                        a.IsNormalized = false;
-                        a.ErrorMsg = "非標準地號";
-                    }
-                    else if (splitArr.SelectMany(c => c).Any(b => !legalNumber.Contains(b)))
-                    {
-                        a.IsNormalized = false;
-                        a.ErrorMsg = "非標準地號";
-                    }
-                    else
+                    if (a.LandNo.All(char.IsDigit) && a.LandNo.Length == 8)
                     {
                         a.IsNormalized = true;
                         a.ErrorMsg = "";
                     }
+                    else
+                    {
+                        var splitArr = a.LandNo.Split('-');
+                        if (!splitArr.Any(x => !string.IsNullOrEmpty(x)))
+                        {
+                            a.IsNormalized = false;
+                            a.ErrorMsg = "地號不可為空";
+                        }
+                        else if (splitArr.Length > 2)
+                        {
+                            a.IsNormalized = false;
+                            a.ErrorMsg = "非標準地號";
+                        }
+                        else if (splitArr.Sum(arr => arr.Length) > 8)
+                        {
+                            a.IsNormalized = false;
+                            a.ErrorMsg = "非標準地號";
+                        }
+                        else if (splitArr.Any(c => c.Length > 4))
+                        {
+                            a.IsNormalized = false;
+                            a.ErrorMsg = "非標準地號";
+                        }
+                        else if (splitArr.SelectMany(c => c).Any(b => !legalNumber.Contains(b)))
+                        {
+                            a.IsNormalized = false;
+                            a.ErrorMsg = "非標準地號";
+                        }
+                        else
+                        {
+                            a.IsNormalized = true;
+                            a.ErrorMsg = "";
+                        }
+                    }
                 }
+            });
+            return this;
+        }
+
+        /// <summary>
+        /// 8碼
+        /// </summary>
+        /// <returns></returns>
+        public LandNoTool PadDash()
+        {
+            LandNoList.Where(x => x.LandNo.All(char.IsDigit) && x.LandNo.Length == 8).ToList().ForEach(x =>
+            {
+                x.LandNo = x.LandNo.Insert(4, "-");
             });
             return this;
         }
