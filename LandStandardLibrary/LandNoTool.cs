@@ -7,11 +7,42 @@ namespace LandStandardLibrary
 {
     public interface ILandNoTool
     {
+        /// <summary>
+        /// 取得標準化地號列表
+        /// </summary>
+        /// <returns></returns>
         List<LandNoResult> Build();
+        /// <summary>
+        /// 正規化
+        /// 使用者只需呼叫此方法即可包含其他所有的轉換
+        /// </summary>
+        /// <returns></returns>
         LandNoTool Normalize();
-
+        /// <summary>
+        /// 去除空白
+        /// </summary>
+        /// <returns></returns>
         LandNoTool Trim();
+        /// <summary>
+        /// 數字和連結號，全形轉半形
+        /// </summary>
+        /// <returns></returns>
         LandNoTool FullToHalf();
+        /// <summary>
+        /// 驗證地號正確性
+        /// </summary>
+        /// <returns></returns>
+        LandNoTool Verify();
+        /// <summary>
+        /// 補Dash
+        /// </summary>
+        /// <returns></returns>
+        LandNoTool PadDash();
+        /// <summary>
+        /// 補零
+        /// </summary>
+        /// <param name="landNo"></param>
+        /// <returns></returns>
         LandNoTool PadZero();
     }
 
@@ -20,29 +51,51 @@ namespace LandStandardLibrary
     /// </summary>
     public class LandNoTool : ILandNoTool
     {
+        #region 屬性
+        private static char[] legalNumber = new char[] { 
+            '0', '1', '2', '3', '4', 
+            '5', '6', '7', '8', '9' 
+        };
         private List<LandNoResult> LandNoList = new List<LandNoResult>();
+        #endregion 屬性
+
+        #region 建構式
+        /// <summary>
+        /// 建構式(處理單一地號)
+        /// </summary>
+        /// <param name="landno">要處理的地號字串</param>
         public LandNoTool(string landno)
         {
             LandNoList.Add(new LandNoResult(landno));
         }
+        /// <summary>
+        /// 建構式(處理單一地號)
+        /// </summary>
+        /// <param name="landno">要處理的地號字串</param>
+        /// <param name="id">識別碼</param>
         public LandNoTool(string landno, int id)
         {
             LandNoList.Add(new LandNoResult(landno, id));
         }
+        /// <summary>
+        /// 建構式(處理多個地號)
+        /// </summary>
+        /// <param name="landnos">要處理的地號字串清單</param>
         public LandNoTool(List<string> landnos)
         {
             LandNoList = landnos.Select(a => new LandNoResult(a)).ToList();
         }
-
+        /// <summary>
+        /// 建構式(處理多個地號)
+        /// </summary>
+        /// <param name="landnos">要處理的地號字串與識別碼清單</param>
         public LandNoTool(List<KeyValuePair<int, string>> landnos)
         {
             LandNoList = landnos.Select(a => new LandNoResult(a.Value, a.Key)).ToList();
         }
+        #endregion 建構式
 
-        /// <summary>
-        /// 使用者只需呼叫此方法即可包含其他所有的轉換
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public LandNoTool Normalize()
         {
             Trim();
@@ -53,10 +106,7 @@ namespace LandStandardLibrary
             return this;
         }
 
-        /// <summary>
-        /// 去除空白
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public LandNoTool Trim()
         {
             LandNoList.ForEach(a =>
@@ -74,10 +124,7 @@ namespace LandStandardLibrary
             return this;
         }
 
-        /// <summary>
-        /// 數字和連結號，全形轉半形
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public LandNoTool FullToHalf()
         {
             LandNoList.ForEach(a =>
@@ -121,6 +168,15 @@ namespace LandStandardLibrary
                         case '—':
                             sb.Append('-');
                             break;
+                        case '（':
+                            sb.Append('(');
+                            break;
+                        case '）':
+                            sb.Append(')');
+                            break;
+                        case '　':
+                            sb.Append(' ');
+                            break;
                         default:
                             sb.Append(a.LandNo[i]);
                             break;
@@ -131,14 +187,9 @@ namespace LandStandardLibrary
             return this;
         }
 
-        /// <summary>
-        /// 驗證地號正確性
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public LandNoTool Verify()
         {
-            var legalNumber = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-
             LandNoList.ForEach(a =>
             {
                 if (a.LandNo == string.Empty)
@@ -198,24 +249,22 @@ namespace LandStandardLibrary
             return this;
         }
 
-        /// <summary>
-        /// 8碼
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public LandNoTool PadDash()
         {
-            LandNoList.Where(x => x.LandNo.All(char.IsDigit) && x.LandNo.Length == 8).ToList().ForEach(x =>
-            {
-                x.LandNo = x.LandNo.Insert(4, "-");
-            });
+            LandNoList
+                .Where(a => a.IsNormalized
+                            && a.LandNo.All(char.IsDigit)
+                            && a.LandNo.Length == 8)
+                .ToList()
+                .ForEach(x =>
+                {
+                    x.LandNo = x.LandNo.Insert(4, "-");
+                });
             return this;
         }
 
-        /// <summary>
-        /// 補零
-        /// </summary>
-        /// <param name="landNo"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public LandNoTool PadZero()
         {
             LandNoList.ForEach(a =>
@@ -225,7 +274,10 @@ namespace LandStandardLibrary
                     if (a.LandNo != string.Empty)
                     {
                         var splitArr = a.LandNo.Split('-').ToList();
-                        if (splitArr.Count() == 1) { splitArr.Add(""); }
+                        if (splitArr.Count() == 1 && splitArr[0].Length <= 4) 
+                        { 
+                            splitArr.Add(""); 
+                        }
 
                         for (var i = 0; i < splitArr.Count(); i++)
                         {
@@ -244,51 +296,10 @@ namespace LandStandardLibrary
             return this;
         }
 
-        /// <summary>
-        /// 取得標準化地號列表
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public List<LandNoResult> Build()
         {
             return LandNoList;
-        }
-    }
-
-    /// <summary>
-    /// 地號標準化結果Model
-    /// </summary>
-    public class LandNoResult
-    {
-        /// <summary>
-        /// 地號
-        /// </summary>
-        public string LandNo { get; set; } = "";
-        /// <summary>
-        /// 是否為自定義地號
-        /// </summary>
-        public bool IsCustom { get; set; } = false;
-        /// <summary>
-        /// 是否成功標準化
-        /// </summary>
-        public bool IsNormalized { get; set; } = false;
-        /// <summary>
-        /// 錯誤訊息
-        /// </summary>
-        public string ErrorMsg { get; set; } = "";
-        /// <summary>
-        /// 參照用的ID
-        /// </summary>
-        public int ID { get; set; } = 0;
-
-        public LandNoResult(string landNo)
-        {
-            LandNo = landNo;
-        }
-
-        public LandNoResult(string landNo, int id)
-        {
-            LandNo = landNo;
-            ID = id;
         }
     }
 }
